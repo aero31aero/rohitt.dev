@@ -74,6 +74,6 @@ module.exports = {
 };
 
 inject_entry('.');
-inject_entry('fun');
+inject_entry('fun', true);
 inject_entry('fun/neon-dystopia', true);
 module.exports.plugins.push(new HtmlWebpackPugPlugin());
