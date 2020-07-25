@@ -9,7 +9,7 @@ const make_entries = (file) => {
     ];
 };
 
-const inject_entry = (page, pug = false) => {
+const inject_entry = (page, pug = true) => {
     let name = 'src-' + page.split('/').join('-');
     if (page === '.') {
         name = 'src-home';
@@ -74,6 +74,6 @@ module.exports = {
 };
 
 inject_entry('.');
-inject_entry('fun', true);
-inject_entry('fun/neon-dystopia', true);
+inject_entry('fun');
+inject_entry('fun/neon-dystopia');
 module.exports.plugins.push(new HtmlWebpackPugPlugin());
