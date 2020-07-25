@@ -1,0 +1,87 @@
+include buildings/central-shaders
+include buildings/logo-shaders
+include buildings/buildings-shaders
+include buildings/ground-shaders
+include buildings/screen-shaders
+include buildings/star-shaders
+
+html
+    head
+        title Rohitt - Neon Dystopia
+    body
+        audio#audio-stream(preload="none")
+        video#video-stream(loop muted preload="none")
+        div.immersive-wrapper
+            div.container#fallback
+                div.underlay
+                div.subject
+                    .message View this page on a desktop/laptop for best experience.
+            div.slider
+                div.slide#slide1
+                    div.message
+                        span.big Welcome to our desolate world
+                        span.small The lack of humanity will surely please you
+                    div.button(onclick="Buildings.start()")
+                        span ENTER EXPERIENCE
+                    div.calling
+                        .line
+                        span
+                            span Navigate using up and down arrow keys
+                div.slide.left#slide2
+                    div.content
+                        h2 You have landed
+                        div
+                            li The Atmos 2017 homepage, immortalized
+                div.slide.right#slide3
+                    div.content
+                        h2 Sponsors
+                        div
+                            li We showed some random ads here,
+                            li You get to enjoy this Anime wallpaper.
+                div.slide.right#slide4
+                    div.content
+                        h2 Proshows
+                        div
+                            li We never got to finish this part.
+                            li The stage was supposed to have the proshow artist standing.
+                div.slide.right#slide5
+                    div.content
+                        h2 Competitions
+                        div.flashlist
+                            li.active TechExpo
+                            li Robowars
+                            li MiniGP
+                            li Bombsquad
+                            li Enigma
+                            li Paper Presentation
+                        div
+                            li (There were tonnes more, but those links are now dead)
+                div.slide.left#slide5
+                    div.content
+                        h2 Workshops
+                        div.flashlist
+                            li.active Fast Track Automation
+                            li Ethical Hacking
+                            li PCB Design
+                            li Internet of Things
+                        div
+                            li (There were tonnes more, but those links are now dead)
+                div.slide.right#slide6
+                    div.content
+                        h2 Crafted with love by
+                        div.list
+                            li
+                                .name Abhilash Verma
+                                .phone Rohitt Vashishtha
+                        a.button(href="https://github.com/aero31aero/rohitt.dev") View Source
+            div.controller
+                div.up(onclick="Buildings.prev()")
+                    i.icon-navigate_next
+                div.down(onclick="Buildings.next()")
+                    i.icon-navigate_next
+        +centralShaders()
+        +logoShaders()
+        +buildingShaders()
+        +groundShaders()
+        +screenShaders()
+        +starShaders()
