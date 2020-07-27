@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
+const webpack = require('webpack');
 
 const make_entries = (file) => {
     return [
@@ -65,15 +66,29 @@ module.exports = {
                 use: ['pug-loader'],
             },
             {
-                test: /\.(png|jpe?g|gif|mp3|mp4)$/i,
+                test: /\.gltf$/,
+                use: ['gltf-webpack-loader'],
+            },
+            {
+                test: /\.(png|jpe?g|gif|mp3|mp4|bin)$/i,
                 use: ['file-loader'],
             },
         ],
     },
-    plugins: [],
+    plugins: [
+        new webpack.IgnorePlugin({
+            resourceRegExp: /\.fbx$/,
+            contextRegExp: /rabbit/,
+        }),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /Material/,
+            contextRegExp: /rabbit/,
+        }),
+    ],
 };
 
 inject_entry('.');
 inject_entry('fun');
 inject_entry('fun/neon-dystopia');
+inject_entry('fun/rabbit');
 module.exports.plugins.push(new HtmlWebpackPugPlugin());
