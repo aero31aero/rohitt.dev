@@ -3,6 +3,7 @@ import * as THREE from 'three';
 window.THREE = THREE; // Needed for importing orbit controls
 require('three/examples/js/controls/OrbitControls.js');
 import load_rabbit from './rabbit';
+import load_trees from './trees';
 import load_sky from './sky';
 const helpers = require('./helpers');
 
@@ -16,10 +17,13 @@ const rows = 5;
 const columns = 40;
 
 function getRandomColor() {
-    var letters = '3456789';
-    var color = '#ee8';
-    for (var i = 0; i < 3; i++) {
-        color += letters[Math.floor(Math.random() * letters.length)];
+    var letters = '0123';
+    var color = '';
+    const r1 = letters[Math.floor(Math.random() * letters.length)];
+    const r2 = letters[Math.floor(Math.random() * letters.length)];
+    color = '#' + r1 + r2 + r1 + r2 + r1 + r2;
+    for (var i = 0; i < 2; i++) {
+        // color += letters[Math.floor(Math.random() * letters.length)];
     }
     return color;
 }
@@ -42,6 +46,9 @@ const make_brick = (scene) => {
         );
     };
     const cube = new THREE.Mesh(geometry, material);
+    cube.rotation.y += (Math.random() - 0.5) * 0.1;
+    cube.scale.z += (Math.random() - 0.5) * 0.1;
+    cube.position.x += (Math.random() - 0.5) * 0.2;
     scene.add(cube);
     return cube;
 };
@@ -81,19 +88,17 @@ function main() {
     camera.position.y = 0.5;
     const scene = new THREE.Scene();
 
-    // renderer.setClearColor(0x000000, 1);
-    const fog = new THREE.FogExp2(0xaaaaaa, 0.5);
+    renderer.setClearColor(0x666666, 1);
+    const fog = new THREE.FogExp2(0x666666, 0.35);
     fog.far = 100;
     scene.fog = fog;
 
     renderer.render(scene, camera);
-    {
-        const color = 0xffffff;
-        const intensity = 1;
-        const light = new THREE.DirectionalLight(color, intensity);
-        light.position.set(0, 2, 3);
-        scene.add(light);
-    }
+    const color = 0xffffff;
+    const intensity = 0.001;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(0, 1, 2);
+    scene.add(light);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     // controls.domElement = renderer.domElement;
@@ -102,10 +107,15 @@ function main() {
     const bricks = get_bricks(scene, controls.target);
     let rabbit = false;
     load_rabbit(scene, controls, camera, rabbit);
+    load_trees(scene, controls, camera, rabbit);
     const sky = load_sky();
-    scene.add(sky);
+    // scene.add(sky);
     console.log('SKY', sky);
     function render(time) {
+        if (light.intensity < 0.5) {
+            let done = light.intensity / 0.5;
+            light.intensity += (done * done + (1 - done) * (1 - done)) / 500;
+        }
         time *= 0.001; // convert time to seconds
         const speed = 2;
         time *= speed;
@@ -117,9 +127,20 @@ function main() {
                 brick_moved = true;
             }
         });
+
+        window.trees.children.forEach((child, n) => {
+            if (child.type !== 'Group') {
+                return;
+            }
+            child.position.z += 0.04;
+            if (child.position.z > 17) {
+                child.position.z -= 30;
+            }
+        });
+
         if (window.rabbit) {
             window.rabbit.position.y =
-                0.15 + (1 / 2) * helpers.get_y(0.5, time, 1);
+                0.05 + (1 / 2) * helpers.get_y(0.5, time, 1);
             window.rabbit.position.x =
                 ((width * rows) / 2) *
                 (Math.cos(time / 2) + (1 / 3) * Math.sin(time * 1.5));
@@ -130,9 +151,19 @@ function main() {
         controls.update(time);
         sky.rotation.y -= 0.001;
         requestAnimationFrame(render);
+
+        window.addEventListener('resize', onWindowResize, false);
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
     }
 
     const start = () => {
+        renderer.setClearColor;
         requestAnimationFrame(render);
     };
     return start;

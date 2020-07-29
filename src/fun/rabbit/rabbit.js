@@ -54,14 +54,14 @@ const scale_scene = (mroot, scene) => {
 
     //Rescale the object to normalized space
     var maxAxis = Math.max(size.x, size.y, size.z);
-    mroot.scale.multiplyScalar(0.2 / maxAxis);
+    mroot.scale.multiplyScalar(0.1 / maxAxis);
     bbox.setFromObject(mroot);
     bbox.getCenter(cent);
     bbox.getSize(size);
     //Reposition somewhere, hackily.
     mroot.position.copy(cent).multiplyScalar(-1);
     mroot.position.y += size.y * 0.5;
-    mroot.position.z += 0.5;
+    // mroot.position.z += 0.5;
 
     const rabbitskin = new THREE.MeshLambertMaterial({ color: 0xffffff });
     rabbitskin.emmisive = 0xffffff;

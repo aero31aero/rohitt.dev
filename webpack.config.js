@@ -66,11 +66,11 @@ module.exports = {
                 use: ['pug-loader'],
             },
             {
-                test: /\.gltf$/,
+                test: /\.(gltf)$/,
                 use: ['gltf-webpack-loader'],
             },
             {
-                test: /\.(png|jpe?g|gif|mp3|mp4|bin)$/i,
+                test: /\.(png|jpe?g|gif|mp3|mp4|bin|glb)$/i,
                 use: ['file-loader'],
             },
         ],

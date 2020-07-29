@@ -36,6 +36,8 @@ canvas {
 
 .ui {
     position: absolute;
+    background: black;
+    color: white;
     top: 0;
     left: 0;
 }
