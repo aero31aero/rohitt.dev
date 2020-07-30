@@ -138,6 +138,13 @@ function main() {
         if (window.trees) {
             window.trees.forEach((tree) => {
                 tree.position.z += 0.005 * speed;
+                tree.traverse((o) => {
+                    if (o.isMesh) {
+                        if (o.name == 'Canopy1') {
+                            o.rotation.z += 0.1;
+                        }
+                    }
+                });
                 if (tree.position.z > 1) {
                     tree.position.z -= 4.2 - Math.random() * 0.4;
                     tree.position.x = helpers.get_tree_locations(1, 3, 10)[0].x;
