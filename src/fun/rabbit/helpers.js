@@ -6,4 +6,19 @@ module.exports = {
         t = t % cycle_time;
         return Math.max(u * t - (a * t * t) / 2, 0); // remain positive
     },
+    dumpObject: (obj, lines = [], isLast = true, prefix = '') => {
+        const localPrefix = isLast ? '└─' : '├─';
+        lines.push(
+            `${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${
+                obj.type
+            }]`
+        );
+        const newPrefix = prefix + (isLast ? '  ' : '│ ');
+        const lastNdx = obj.children.length - 1;
+        obj.children.forEach((child, ndx) => {
+            const isLast = ndx === lastNdx;
+            module.exports.dumpObject(child, lines, isLast, newPrefix);
+        });
+        return lines;
+    },
 };

@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "jquery": "^3.5.1",
+    "stats.js": "^0.17.0",
     "three": "^0.117.1",
     "three-gltf-loader": "^1.111.0",
     "three.js": "^0.77.1"

@@ -3,22 +3,7 @@ import * as THREE from 'three';
 const rabbit = require('./rabbit/scene.gltf');
 import gltfPath from './rabbit/scene.gltf';
 const loader = new GLTFLoader();
-
-function dumpObject(obj, lines = [], isLast = true, prefix = '') {
-    const localPrefix = isLast ? '└─' : '├─';
-    lines.push(
-        `${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${
-            obj.type
-        }]`
-    );
-    const newPrefix = prefix + (isLast ? '  ' : '│ ');
-    const lastNdx = obj.children.length - 1;
-    obj.children.forEach((child, ndx) => {
-        const isLast = ndx === lastNdx;
-        dumpObject(child, lines, isLast, newPrefix);
-    });
-    return lines;
-}
+import helpers from './helpers';
 
 // COPIED FROM A BLOGPOST; KEEP IT IN CASE IT IS USEFUL LATER
 function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
@@ -104,7 +89,7 @@ const load_rabbit = (scene, controls, camera, object) => {
             // scene.add(root);
             window.rabbit = scale_scene(root, scene);
             console.log('Set object', object);
-            console.log(dumpObject(root).join('\n'));
+            console.log(helpers.dumpObject(root).join('\n'));
 
             gltf.animations; // Array<THREE.AnimationClip>
             gltf.scene; // THREE.Group

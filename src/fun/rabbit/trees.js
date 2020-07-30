@@ -3,22 +3,7 @@ import * as THREE from 'three';
 const rabbit = require('./rabbit/scene.gltf');
 import gltfPath from './tree.glb';
 const loader = new GLTFLoader();
-
-function dumpObject(obj, lines = [], isLast = true, prefix = '') {
-    const localPrefix = isLast ? '└─' : '├─';
-    lines.push(
-        `${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${
-            obj.type
-        }]`
-    );
-    const newPrefix = prefix + (isLast ? '  ' : '│ ');
-    const lastNdx = obj.children.length - 1;
-    obj.children.forEach((child, ndx) => {
-        const isLast = ndx === lastNdx;
-        dumpObject(child, lines, isLast, newPrefix);
-    });
-    return lines;
-}
+import helpers from './helpers';
 
 const scale_scene = (mroot, scene) => {
     var bbox = new THREE.Box3().setFromObject(mroot);
@@ -34,6 +19,9 @@ const scale_scene = (mroot, scene) => {
     console.log('Cox Size', new THREE.Box3().setFromObject(mroot), mroot.scale);
     mroot.scale.y *= 1;
     //Reposition somewhere, hackily.
+    const pinktree = new THREE.MeshLambertMaterial({ color: 0xff7766 });
+    const yellowtree = new THREE.MeshLambertMaterial({ color: 0xdddd00 });
+    const bluetree = new THREE.MeshLambertMaterial({ color: 0x1188ff });
     mroot.position.copy(cent).multiplyScalar(-1);
     mroot.position.y = 0;
     mroot.position.x += 0.3;
@@ -41,7 +29,29 @@ const scale_scene = (mroot, scene) => {
     mroot.children.forEach((child, n) => {
         // If the tree is too far off center, place it in a thin band around the path.
         if (child.type !== 'Group') {
+            console.log('CHIL', child);
             return;
+        }
+        if (n % 3 == 0) {
+            child.traverse((o) => {
+                if (o.name.includes('Cylinder.001_0') && o.isMesh) {
+                    o.material = pinktree;
+                }
+            });
+        }
+        if (n % 3 == 1) {
+            child.traverse((o) => {
+                if (o.name.includes('Cylinder.001_0') && o.isMesh) {
+                    o.material = yellowtree;
+                }
+            });
+        }
+        if (n % 3 == 2) {
+            child.traverse((o) => {
+                if (o.name.includes('Cylinder.001_0') && o.isMesh) {
+                    o.material = bluetree;
+                }
+            });
         }
         const side = Math.random() > 0.5 ? 1 : -1; // Place on left or right
         const new_x = side * (10 + 1.5 * Math.random()) - 3;
@@ -60,9 +70,6 @@ const scale_scene = (mroot, scene) => {
         }
     });
 
-    // const rabbitskin = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    // rabbitskin.emmisive = 0xffffff;
-    // rabbitskin.reflectivity = 0.5;
     // mroot.traverse((o) => {
     //     if (o.isMesh) o.material = rabbitskin;
     // });
@@ -84,7 +91,7 @@ const load_tree = (scene, controls, camera, object) => {
             // scene.add(root);
             window.trees = scale_scene(root, scene);
             console.log('Set object', object);
-            console.log(dumpObject(root).join('\n'));
+            console.log(helpers.dumpObject(root).join('\n'));
 
             gltf.animations; // Array<THREE.AnimationClip>
             gltf.scene; // THREE.Group

@@ -6,7 +6,11 @@ import load_rabbit from './rabbit';
 import load_trees from './trees';
 import load_sky from './sky';
 const helpers = require('./helpers');
+import Stats from 'stats.js';
 
+var stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
 const brick_material = new THREE.MeshPhongMaterial({ color: 0xee7744 });
 
 const width = 0.1;
@@ -49,6 +53,7 @@ const make_brick = (scene) => {
     cube.rotation.y += (Math.random() - 0.5) * 0.1;
     cube.scale.z += (Math.random() - 0.5) * 0.1;
     cube.position.x += (Math.random() - 0.5) * 0.2;
+    cube.position.y += (Math.random() - 0.5) * 0.01;
     scene.add(cube);
     return cube;
 };
@@ -112,6 +117,8 @@ function main() {
     // scene.add(sky);
     console.log('SKY', sky);
     function render(time) {
+        stats.begin();
+
         if (light.intensity < 0.5) {
             let done = light.intensity / 0.5;
             light.intensity += (done * done + (1 - done) * (1 - done)) / 500;
@@ -146,6 +153,8 @@ function main() {
                 (Math.cos(time / 2) + (1 / 3) * Math.sin(time * 1.5));
             controls.target.y = 0.3;
         }
+
+        stats.end();
 
         renderer.render(scene, camera);
         controls.update(time);
