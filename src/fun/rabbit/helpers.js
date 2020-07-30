@@ -25,10 +25,12 @@ const helpers = {
     get_tree_locations: (count, width = 50, depth = 50) => {
         const points = [];
         for (let i = 0; i < count; i++) {
+            let side = Math.floor(2 * Math.random()) === 0 ? -1 : 1;
+            let random = Math.random();
             points.push({
-                x: width * Math.sqrt(Math.random()) - width / 2 - 1 / 2,
-                z: -depth * Math.sqrt(Math.random()),
-                y: 0,
+                x: side * (0.5 + random * 0.3 + (width / 2) * random * random),
+                z: depth * Math.sqrt(Math.random()) - depth / 2,
+                y: 0.4,
             });
         }
         return points;

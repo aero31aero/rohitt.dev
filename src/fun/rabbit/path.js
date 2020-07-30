@@ -94,8 +94,7 @@ function main() {
     const scene = new THREE.Scene();
 
     renderer.setClearColor(0x666666, 1);
-    // const fog = new THREE.FogExp2(0x666666, 0.35);
-    const fog = new THREE.FogExp2(0x666666, 0);
+    const fog = new THREE.FogExp2(0x666666, 0.35);
     fog.far = 100;
     scene.fog = fog;
 
@@ -138,9 +137,10 @@ function main() {
 
         if (window.trees) {
             window.trees.forEach((tree) => {
-                tree.position.z += 0.04;
-                if (tree.position.z > 0) {
-                    tree.position.z -= 3;
+                tree.position.z += 0.005 * speed;
+                if (tree.position.z > 1) {
+                    tree.position.z -= 4.2 - Math.random() * 0.4;
+                    tree.position.x = helpers.get_tree_locations(1, 3, 10)[0].x;
                 }
             });
         }
