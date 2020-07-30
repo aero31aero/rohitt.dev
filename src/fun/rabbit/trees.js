@@ -4,15 +4,16 @@ const rabbit = require('./rabbit/scene.gltf');
 import gltfPath from './tree.glb';
 const loader = new GLTFLoader();
 import helpers from './helpers';
+console.log('HELPER', helpers);
 
-const scale_scene = (mroot, scene) => {
+const scale_scene = (mroot, scene, gltf) => {
     var bbox = new THREE.Box3().setFromObject(mroot);
     var cent = bbox.getCenter(new THREE.Vector3());
     var size = bbox.getSize(new THREE.Vector3());
 
     //Rescale the object to normalized space
     var maxAxis = Math.max(size.x, size.y, size.z);
-    mroot.scale.multiplyScalar(10 / maxAxis);
+    mroot.scale.multiplyScalar(2 / maxAxis);
     bbox.setFromObject(mroot);
     bbox.getCenter(cent);
     bbox.getSize(size);
@@ -23,60 +24,22 @@ const scale_scene = (mroot, scene) => {
     const yellowtree = new THREE.MeshLambertMaterial({ color: 0xdddd00 });
     const bluetree = new THREE.MeshLambertMaterial({ color: 0x1188ff });
     mroot.position.copy(cent).multiplyScalar(-1);
-    mroot.position.y = 0;
-    mroot.position.x += 0.3;
-    mroot.position.z = -2.5;
-    mroot.children.forEach((child, n) => {
-        // If the tree is too far off center, place it in a thin band around the path.
-        if (child.type !== 'Group') {
-            console.log('CHIL', child);
-            return;
-        }
-        if (n % 3 == 0) {
-            child.traverse((o) => {
-                if (o.name.includes('Cylinder.001_0') && o.isMesh) {
-                    o.material = pinktree;
-                }
-            });
-        }
-        if (n % 3 == 1) {
-            child.traverse((o) => {
-                if (o.name.includes('Cylinder.001_0') && o.isMesh) {
-                    o.material = yellowtree;
-                }
-            });
-        }
-        if (n % 3 == 2) {
-            child.traverse((o) => {
-                if (o.name.includes('Cylinder.001_0') && o.isMesh) {
-                    o.material = bluetree;
-                }
-            });
-        }
-        const side = Math.random() > 0.5 ? 1 : -1; // Place on left or right
-        const new_x = side * (10 + 1.5 * Math.random()) - 3;
-        if (child.position.x > 15) {
-            // Place trees on the right side in the -10 to -20 bracket
-            child.position.x = new_x;
-            child.position.z -= 10;
-            console.log('From right to', new_x);
-        } else if (child.position.x < -15) {
-            // Place tress on the left side in the -20 to -30 bracker
-            child.position.x = new_x;
-            child.position.z -= 20;
-            console.log('From left to', new_x);
-        } else {
-            console.log('Unmodified', child.position);
-        }
+    mroot.position.y = 1.27;
+    mroot.position.x = 0;
+    mroot.position.z = 0;
+    const positions = helpers.get_tree_locations(30, 3, 5);
+    const trees = positions.map((p) => {
+        const tree = helpers.clone_gltf(gltf).scene;
+        const { x, y, z } = p;
+        // console.log(helpers.dumpObject(tree).join('\n'));
+        tree.position.set(x, 1.27, z);
+        // console.log(tree.position);
+        scene.add(tree);
+        return tree;
     });
-
-    // mroot.traverse((o) => {
-    //     if (o.isMesh) o.material = rabbitskin;
-    // });
-    // cars = mroot.getObjectByName('Cars');
-    // console.log("HEREEEEE", cars);
-    scene.add(mroot);
-    return mroot;
+    // scene.add(mroot);
+    window.trees = trees;
+    return trees;
 };
 
 const load_tree = (scene, controls, camera, object) => {
@@ -89,7 +52,7 @@ const load_tree = (scene, controls, camera, object) => {
             console.log('ADDING THIS');
             const root = gltf.scene;
             // scene.add(root);
-            window.trees = scale_scene(root, scene);
+            window.trees = scale_scene(root, scene, gltf);
             console.log('Set object', object);
             console.log(helpers.dumpObject(root).join('\n'));
 

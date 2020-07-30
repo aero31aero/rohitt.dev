@@ -8,4 +8,5 @@ $(document).ready(() => {
         audio.play();
         path();
     });
+    // $('#play').click();
 });

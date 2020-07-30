@@ -1,4 +1,5 @@
-module.exports = {
+import * as THREE from 'three';
+const helpers = {
     get_y: (u, t, a) => {
         // think class 10th physics
         // s = ut + 1/2at^2
@@ -17,8 +18,67 @@ module.exports = {
         const lastNdx = obj.children.length - 1;
         obj.children.forEach((child, ndx) => {
             const isLast = ndx === lastNdx;
-            module.exports.dumpObject(child, lines, isLast, newPrefix);
+            helpers.dumpObject(child, lines, isLast, newPrefix);
         });
         return lines;
     },
+    get_tree_locations: (count, width = 50, depth = 50) => {
+        const points = [];
+        for (let i = 0; i < count; i++) {
+            points.push({
+                x: width * Math.sqrt(Math.random()) - width / 2 - 1 / 2,
+                z: -depth * Math.sqrt(Math.random()),
+                y: 0,
+            });
+        }
+        return points;
+    },
+    clone_gltf: (gltf) => {
+        const clone = {
+            animations: gltf.animations,
+            scene: gltf.scene.clone(true),
+        };
+
+        const skinnedMeshes = {};
+
+        gltf.scene.traverse((node) => {
+            if (node.isSkinnedMesh) {
+                skinnedMeshes[node.name] = node;
+            }
+        });
+
+        const cloneBones = {};
+        const cloneSkinnedMeshes = {};
+
+        clone.scene.traverse((node) => {
+            if (node.isBone) {
+                cloneBones[node.name] = node;
+            }
+
+            if (node.isSkinnedMesh) {
+                cloneSkinnedMeshes[node.name] = node;
+            }
+        });
+
+        for (let name in skinnedMeshes) {
+            const skinnedMesh = skinnedMeshes[name];
+            const skeleton = skinnedMesh.skeleton;
+            const cloneSkinnedMesh = cloneSkinnedMeshes[name];
+
+            const orderedCloneBones = [];
+
+            for (let i = 0; i < skeleton.bones.length; ++i) {
+                const cloneBone = cloneBones[skeleton.bones[i].name];
+                orderedCloneBones.push(cloneBone);
+            }
+
+            cloneSkinnedMesh.bind(
+                new THREE.Skeleton(orderedCloneBones, skeleton.boneInverses),
+                cloneSkinnedMesh.matrixWorld
+            );
+        }
+        return clone;
+    },
 };
+
+export default helpers;

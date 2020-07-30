@@ -5,7 +5,7 @@ require('three/examples/js/controls/OrbitControls.js');
 import load_rabbit from './rabbit';
 import load_trees from './trees';
 import load_sky from './sky';
-const helpers = require('./helpers');
+import helpers from './helpers';
 import Stats from 'stats.js';
 
 var stats = new Stats();
@@ -94,7 +94,8 @@ function main() {
     const scene = new THREE.Scene();
 
     renderer.setClearColor(0x666666, 1);
-    const fog = new THREE.FogExp2(0x666666, 0.35);
+    // const fog = new THREE.FogExp2(0x666666, 0.35);
+    const fog = new THREE.FogExp2(0x666666, 0);
     fog.far = 100;
     scene.fog = fog;
 
@@ -135,15 +136,14 @@ function main() {
             }
         });
 
-        window.trees.children.forEach((child, n) => {
-            if (child.type !== 'Group') {
-                return;
-            }
-            child.position.z += 0.04;
-            if (child.position.z > 17) {
-                child.position.z -= 30;
-            }
-        });
+        if (window.trees) {
+            window.trees.forEach((tree) => {
+                tree.position.z += 0.04;
+                if (tree.position.z > 0) {
+                    tree.position.z -= 3;
+                }
+            });
+        }
 
         if (window.rabbit) {
             window.rabbit.position.y =
