@@ -7,7 +7,7 @@
     "dev": "webpack --mode development",
     "start": "webpack-dev-server --debug --devtool source-map --mode development",
     "build": "webpack --mode production",
-    "format": "prettier \"**/*.{js,ts,css,json,html}\" --write"
+    "format": "prettier \"**/*.{js,ts,css,json,html,pug}\" --write"
   },
   "keywords": [],
   "author": "",
@@ -15,9 +15,11 @@
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
+    "@prettier/plugin-pug": "^1.13.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
     "file-loader": "^6.0.0",
+    "glob": "^7.1.6",
     "gltf-webpack-loader": "^1.0.6",
     "html-webpack-plugin": "^4.5.0",
     "html-webpack-pug-plugin": "^2.0.0",

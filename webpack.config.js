@@ -15,7 +15,6 @@ const inject_entry = (page, pug = true) => {
     if (page === '.') {
         name = 'src-home';
     }
-    const plugin = pug ? HtmlWebpackPugPlugin : HtmlWebpackPlugin;
     const ext = pug ? 'pug' : 'html';
     module.exports.entry[name] = make_entries(`${page}/index.js`);
     module.exports.plugins.push(
@@ -23,6 +22,19 @@ const inject_entry = (page, pug = true) => {
             filename: `${page}/index.html`,
             template: path.resolve(__dirname, 'src', `${page}/index.${ext}`),
             chunks: [name],
+        })
+    );
+};
+
+const make_blog = () => {
+    const blog_root = path.resolve(__dirname, 'src', 'blog');
+    module.exports.entry['blog'] = make_entries(`${blog_root}/index.js`);
+    module.exports.plugins.push(
+        new HtmlWebpackPlugin({
+            filename: `blog/index.html`,
+            template: path.resolve(blog_root, 'index.pug'),
+            chunks: ['blog'],
+            main_post: 'Hello World',
         })
     );
 };
@@ -88,7 +100,8 @@ module.exports = {
 };
 
 inject_entry('.');
-inject_entry('fun');
-inject_entry('fun/neon-dystopia');
-inject_entry('fun/rabbit');
+// inject_entry('fun');
+// inject_entry('fun/neon-dystopia');
+// inject_entry('fun/rabbit');
+make_blog();
 module.exports.plugins.push(new HtmlWebpackPugPlugin());
