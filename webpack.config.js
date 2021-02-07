@@ -141,9 +141,9 @@ const webpack_config = {
 
 const main = async () => {
     inject_entry('.');
-    // inject_entry('fun');
-    // inject_entry('fun/neon-dystopia');
-    // inject_entry('fun/rabbit');
+    inject_entry('fun');
+    inject_entry('fun/neon-dystopia');
+    inject_entry('fun/rabbit');
     await make_blog();
     webpack_config.plugins.push(new HtmlWebpackPugPlugin());
     return webpack_config;
