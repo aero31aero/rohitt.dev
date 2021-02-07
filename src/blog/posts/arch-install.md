@@ -38,9 +38,11 @@ pretty dang cool and an example of how flexible the tools we have are.
 
 Enjoy the install-notes that I made while doing the install. This post is an after thought, really.
 
+[[toc]]
+
 ---
 
-## 1. Preparation
+## Preparation
 
 I'm on Manjaro and its, well, mostly Arch, so I'm attempting a setup
 where I install Arch from the current Manjaro install itself.
@@ -50,7 +52,7 @@ Let's install the latest arch install scripts that the arch iso uses.
     sudo pacman -S arch-install-scripts
 
 Now, the fiddly bits.
-pacstap script depends on a valid pacman mirrorlist being available.
+pacstrap script depends on a valid pacman mirrorlist being available.
 we don't want Arch to install Manjaro packages by accident (OUCH!).
 
     sudo cp /etc/pacman.d /etc/pacman.d.bak -r
@@ -76,7 +78,7 @@ Update the packagelist
 
     sudo pacman -Syy
 
-## 2. SETUP FILESYSTEM
+## Filesystem Setup/Partitioning
 
 The disk has two partitions, both unformatted.
 
@@ -106,7 +108,7 @@ unmount
     sudo umount /mnt
 
 ----------------------------------------------------------------------
-## 3. MOUNT FILESYSTEM FOR BOOTSTRAPPING ARCH
+## Mounting the Filesystem
 
 make the filesystem structure
 
@@ -157,7 +159,7 @@ Final state after all this (warning, some recursion):
     └── snapshots
 ```
 
-## 4. INSTALL ARCH (OR TRY TO)
+## Install Arch
 
 We're now going to follow the install guide for a change
 
@@ -183,7 +185,7 @@ proceeded to install the packages after importing a hell of a lot of pgp keys. C
 
 Hmm, looks good.
 
-## 5. CORE STUFF (MAINLY FROM THE INSTALL GUIDE)
+## Core system setup
 
     sudo arch-chroot /mnt
 
@@ -250,7 +252,7 @@ Enable other OSes to detect Arch
     sudo pacman -S lsb-release
 
 
-## 7. MAKE USER ACCOUNT AND DIRECTORIES
+## User account and home directory setup
 
     pacman -S sudo
     EDITOR=vim visudo # Uncomment the first line that has 'wheel' in it; enables the wheel group
@@ -299,7 +301,7 @@ Let's link up some directories.
     ln -s ~/data-drive/rohitt/Downloads ~/Downloads
     ln -s ~/data-drive/rohitt/Documents ~/Parchments
 
-## 7. INSTALL COOL TOOLS
+## Installing basic tools for a desktop
 
 We're now using the user account. Hello again, sudo.
 
@@ -355,7 +357,7 @@ screen recording game. This is a total experiment; I have no clue how pipewire w
 
     sudo pacman -S pipewire pipewire-pulse pipewire-alsa
 
-9. CONFIGURE PROGRAMS AND TOOLS
+## Configuring my programs
 
 Let's mount our current home directory.
 
@@ -443,7 +445,7 @@ zsh
     cp -r mnt/rohitt/.oh-my-zsh .oh-my-zsh
     chsh rohitt -s /usr/bin/zsh
 
-## 9. CONFIGURE DEV WORK
+## Setting up the dev environment
 
     sudo pacman -S docker vagrant nodejs atom diff-so-fancy
 
@@ -465,7 +467,7 @@ pull in the zuliprc
     cd ~
     cp ~/data-drive/rohitt/zuliprc ~/zuliprc
 
-## 10: FINAL CHANGES IN MANJARO
+## Final steps in Manjaro
 
 Bring pacman stuff back to normal
 
@@ -481,7 +483,7 @@ Reboot to our new Arch install
 
     sudo reboot now
 
-## 10: POST INSTALL
+## First boot
 
 First, we boot and realize something is off because our booted up system
 doesn't have any `/etc` or `/home` etc. Turns out keeping `fstab` in `/etc` and
@@ -535,7 +537,7 @@ tweak the scripts
     ./backup.sh # backups from my previous partition, here, ~/data-drive which was my last home drive.
     ./restore.sh # restore to my current home partition.
 
-## 11. FUTUREPROOFING FOR MISTAKES
+## Futureproofing for mistakes
 
 We know we'll mess this install up eventually, let's futureproof ourselves against it.
 The current strategy is to create snapshots (and lots of them) automatically and keep
@@ -606,7 +608,7 @@ Finally, let's list our snapshots so far:
 
 ## Conclusion
 
-BTW:
+BTW, I now use Arch. Finally.
 
 ```
 $ neofetch

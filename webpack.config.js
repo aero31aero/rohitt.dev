@@ -5,7 +5,9 @@ const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 const webpack = require('webpack');
 const glob = require('glob-promise');
 const matter = require('gray-matter');
-const md = require('markdown-it')();
+let md = require('markdown-it')();
+md.use(require("markdown-it-anchor"));
+md.use(require("markdown-it-table-of-contents"));
 const { post } = require('jquery');
 
 const make_entries = (file) => {
