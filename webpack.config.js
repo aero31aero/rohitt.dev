@@ -70,7 +70,7 @@ const make_blog = async () => {
             posts_data.forEach((post) => {
                 webpack_config.plugins.push(
                     new HtmlWebpackPlugin({
-                        filename: `blog/${post.data.slug}`,
+                        filename: `blog/${post.data.slug}/index.html`, // hacks, webpack dev server is weird with .html extension.
                         template: path.resolve(blog_root, 'post.pug'),
                         chunks: ['blog'],
                         post: post,
