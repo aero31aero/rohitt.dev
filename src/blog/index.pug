@@ -1,0 +1,9 @@
+- const opts = htmlWebpackPlugin.options
+html
+	head
+		title Rohitt - Home
+	body
+		h1 Rohitt's Blog
+		p List of Posts
+		each post in opts.posts
+			a(href=post.url)= post.title

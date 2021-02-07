@@ -1,0 +1,9 @@
+- const opts = htmlWebpackPlugin.options
+html
+	head
+		title Rohitt - #{opts.post.data.title}
+	body
+		h1 #{opts.post.data.title} - Rohitt's Blog
+		.content.markdown-body
+			| !{opts.post.rendered}
+
