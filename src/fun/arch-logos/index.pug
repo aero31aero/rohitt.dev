@@ -1,0 +1,48 @@
+- const opts = htmlWebpackPlugin.options
+html
+    head
+        meta(name='viewport' content='width=device-width, initial-scale=1.0')
+        title Rohitt - Arch Logos
+    body
+        .main-column
+            h1.page-title Archlinux Logo Submissions
+            p
+                | Arch had a
+                |
+                a(href='https://bbs.archlinux.org/viewtopic.php?id=38051') logo competition
+                |
+                | somewhat early on in its history (2007) but the original forum post's
+                | links don't work anymore. Thankfully,
+                |
+                a(href='https://github.com/jelly') jelle van der Waa
+                |
+                | backed up the submissions in one easy to access place.
+            p
+                | This page lists those logos from
+                |
+                a(href='https://pkgbuild.com/%7Ejelle/logo-contest/') the backed up version
+                |
+                | on a single page. Enjoy the submissions in all their glory here. :)
+            p
+                em
+                    | Even this page isn't very much fun to navigate; there are submissions by
+                    |
+                    = Object.keys(opts.data).length
+                    |
+                    | people that you'll linearly scroll through here. Sorry, I couldn't think 
+                    | of a better navigation strategy.
+            hr
+            .left
+                h2 Index
+                ol
+                    each links, submitter in opts.data
+                        li
+                            a(href='#' + submitter)=submitter
+                    
+            .container
+                each links, submitter in opts.data
+                    div.target(id=submitter)
+                    h2
+                        a(href='#' + submitter)=submitter
+                    each link in links
+                        img(src=link)

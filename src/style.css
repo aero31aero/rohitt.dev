@@ -2,3 +2,9 @@ h1 {
     color: orange;
     padding-left: 20px;
 }
+
+.main-column {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+}

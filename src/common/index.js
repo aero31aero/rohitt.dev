@@ -1,5 +1,6 @@
 import '../style.css';
-console.log('Hello webpack!');
+import 'regenerator-runtime/runtime';
+console.log('Hello there!');
 
 import $ from 'jquery';
 window.$ = $;

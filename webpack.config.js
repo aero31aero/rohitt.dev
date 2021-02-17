@@ -6,9 +6,9 @@ const webpack = require('webpack');
 const glob = require('glob-promise');
 const matter = require('gray-matter');
 let md = require('markdown-it')();
-md.use(require("markdown-it-anchor"));
-md.use(require("markdown-it-table-of-contents"));
-const { post } = require('jquery');
+md.use(require('markdown-it-anchor'));
+md.use(require('markdown-it-table-of-contents'));
+const { post, data } = require('jquery');
 
 const make_entries = (file) => {
     return [
@@ -17,18 +17,31 @@ const make_entries = (file) => {
     ];
 };
 
-const inject_entry = (page, pug = true) => {
+const inject_entry = async (page, pug = true) => {
     let name = 'src-' + page.split('/').join('-');
     if (page === '.') {
         name = 'src-home';
     }
     const ext = pug ? 'pug' : 'html';
+
+    let data = {}; // optional data from the page.
+    const server_script_path = path.resolve(
+        __dirname,
+        'src',
+        page,
+        'server.js'
+    );
+    if (fs.existsSync(server_script_path)) {
+        const server_script = require(server_script_path);
+        data = await server_script();
+    }
     webpack_config.entry[name] = make_entries(`${page}/index.js`);
     webpack_config.plugins.push(
         new HtmlWebpackPlugin({
             filename: `${page}/index.html`,
             template: path.resolve(__dirname, 'src', `${page}/index.${ext}`),
             chunks: [name],
+            data: data,
         })
     );
 };
@@ -142,10 +155,11 @@ const webpack_config = {
 };
 
 const main = async () => {
-    inject_entry('.');
-    inject_entry('fun');
-    inject_entry('fun/neon-dystopia');
-    inject_entry('fun/rabbit');
+    await inject_entry('.');
+    await inject_entry('fun');
+    await inject_entry('fun/neon-dystopia');
+    await inject_entry('fun/rabbit');
+    await inject_entry('fun/arch-logos');
     await make_blog();
     webpack_config.plugins.push(new HtmlWebpackPugPlugin());
     return webpack_config;
