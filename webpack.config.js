@@ -137,6 +137,10 @@ const webpack_config = {
                 use: ['gltf-webpack-loader'],
             },
             {
+                test: /\.glsl$/,
+                use: ['webpack-glsl-loader'],
+            },
+            {
                 test: /\.(png|jpe?g|gif|mp3|mp4|bin|glb)$/i,
                 use: ['file-loader'],
             },

@@ -36,11 +36,13 @@
     "style-loader": "^1.2.1",
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-glsl-loader": "^1.0.1"
   },
   "dependencies": {
     "gray-matter": "^4.0.2",
     "jquery": "^3.5.1",
+    "pixi.js": "^6.0.2",
     "three": "^0.117.1",
     "three-gltf-loader": "^1.111.0",
     "three.js": "^0.77.1"
