@@ -24,7 +24,6 @@ const main = async () => {
         }
         data[href.replace('/', '')] = image_links;
     }
-    console.log(data);
     return data;
 };
 

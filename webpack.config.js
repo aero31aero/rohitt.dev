@@ -9,6 +9,7 @@ let md = require('markdown-it')();
 md.use(require('markdown-it-anchor'));
 md.use(require('markdown-it-table-of-contents'));
 const { post, data } = require('jquery');
+const promise = require('glob-promise');
 
 const make_entries = (file) => {
     return [
@@ -70,7 +71,6 @@ const make_blog = async () => {
             posts = posts.map((e) => {
                 return e.replace(blog_root, '/blog');
             });
-            console.log('posts', posts);
             const posts_data = get_posts_data(posts);
             webpack_config.plugins.push(
                 new HtmlWebpackPlugin({
@@ -155,12 +155,16 @@ const webpack_config = {
 };
 
 const main = async () => {
-    await inject_entry('.');
-    await inject_entry('fun');
-    await inject_entry('fun/neon-dystopia');
-    await inject_entry('fun/rabbit');
-    await inject_entry('fun/arch-logos');
-    await make_blog();
+    const tasks = [
+        inject_entry('.'),
+        inject_entry('fun'),
+        inject_entry('fun/neon-dystopia'),
+        inject_entry('fun/rabbit'),
+        inject_entry('fun/arch-logos'),
+        inject_entry('fun/circles'),
+        make_blog(),
+    ];
+    await Promise.all(tasks);
     webpack_config.plugins.push(new HtmlWebpackPugPlugin());
     return webpack_config;
 };
