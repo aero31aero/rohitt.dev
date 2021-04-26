@@ -144,6 +144,10 @@ const webpack_config = {
                 test: /\.(png|jpe?g|gif|mp3|mp4|bin|glb)$/i,
                 use: ['file-loader'],
             },
+            {
+                test: /\.(txt)$/i,
+                use: ['raw-loader'],
+            },
         ],
     },
     plugins: [
@@ -166,6 +170,7 @@ const main = async () => {
         inject_entry('fun/rabbit'),
         inject_entry('fun/arch-logos'),
         inject_entry('fun/circles'),
+        inject_entry('fun/mesh'),
         make_blog(),
     ];
     await Promise.all(tasks);
