@@ -41,7 +41,6 @@
     "webpack-glsl-loader": "^1.0.1"
   },
   "dependencies": {
-    "d3-delaunay": "^5.3.0",
     "gray-matter": "^4.0.2",
     "jquery": "^3.5.1",
     "pixi.js": "^6.0.2",

@@ -2,12 +2,12 @@ import * as THREE from 'three';
 
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 
-import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
 import teeth from './teeth.txt';
 import voronoi from './voronoi.txt';
+import random_points from './random-points.txt';
 
 const vpoints = voronoi.split('\n').map((v) => {
     v = v.split(' ');
@@ -43,9 +43,9 @@ function init() {
         1e7
     );
     camera.position.z = 10000;
-    camera.position.y = 2000;
-    camera.position.x = 5000;
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.position.y = 10000;
+    camera.position.x = 10000;
+    camera.lookAt(new THREE.Vector3(3000, 1000, 1000));
 
     scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x000000, 0.0000025);
@@ -63,29 +63,49 @@ function init() {
         ];
 
     const vertices1 = [];
+    const vertices2 = [];
 
     teeth.split('\n').forEach((t) => {
         t = t.split(' ');
         vertices1.push(t[0], t[1], t[2]);
+    });
+    random_points.split('\n').forEach((t) => {
+        t = t.split(' ');
+        vertices2.push(t[0], t[1], t[2]);
     });
 
     starsGeometry[0].setAttribute(
         'position',
         new THREE.Float32BufferAttribute(vertices1, 3)
     );
+    starsGeometry[1].setAttribute(
+        'position',
+        new THREE.Float32BufferAttribute(vertices2, 3)
+    );
 
-    const starsMaterial = new THREE.PointsMaterial({
-        color: 0x555555,
-        size: 1,
-        sizeAttenuation: false,
-    });
+    const starsMaterials = [
+        new THREE.PointsMaterial({
+            color: 0x555555,
+            size: 1,
+            sizeAttenuation: false,
+        }),
+        new THREE.PointsMaterial({
+            color: 0xee,
+            size: 5,
+            sizeAttenuation: false,
+        }),
+    ];
 
-    const stars = new THREE.Points(starsGeometry[0], starsMaterial);
-    // stars.rotation.x = (3 * Math.PI) / 2;
-    // stars.scale.setScalar(128);
+    const stars = new THREE.Points(starsGeometry[0], starsMaterials[0]);
     stars.matrixAutoUpdate = false;
     stars.updateMatrix();
     scene.add(stars);
+
+    // stars
+    const stars2 = new THREE.Points(starsGeometry[1], starsMaterials[1]);
+    stars2.matrixAutoUpdate = false;
+    stars2.updateMatrix();
+    scene.add(stars2);
     //lines
 
     const lines = [];
@@ -102,15 +122,17 @@ function init() {
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
 
-    controls = new FlyControls(camera, renderer.domElement);
-
-    controls.movementSpeed = 1000;
-    controls.domElement = renderer.domElement;
-    controls.rollSpeed = Math.PI / 24;
-    controls.autoForward = false;
-    controls.dragToLook = false;
-
-    //
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.maxPolarAngle = Math.PI;
+    controls.minDistance = 1000;
+    controls.maxDistance = 25000;
+    controls.autoRotate = true;
+    controls.target = new THREE.Vector3(1300, 1000, 2000); // hand tweaked to target the mesh.
+    controls.mouseButtons = {
+        LEFT: THREE.MOUSE.ROTATE,
+        MIDDLE: THREE.MOUSE.DOLLY,
+        RIGHT: THREE.MOUSE.PAN,
+    };
 
     stats = new Stats();
     document.body.appendChild(stats.dom);
@@ -118,14 +140,9 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 
     // postprocessing
-
     const renderModel = new RenderPass(scene, camera);
-    const effectFilm = new FilmPass(0.35, 0.75, 2048, false);
-
     composer = new EffectComposer(renderer);
-
     composer.addPass(renderModel);
-    composer.addPass(effectFilm);
 }
 
 function onWindowResize() {
